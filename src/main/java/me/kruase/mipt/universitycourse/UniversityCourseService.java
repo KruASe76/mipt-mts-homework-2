@@ -15,11 +15,11 @@ public class UniversityCourseService {
         return repository.getById(id);
     }
 
-    public void create(UniversityCourse course) {
+    public UniversityCourse create(UniversityCourse course) {
         // Verify university exists before creating course
         universityRepository.getById(course.universityId());
 
-        repository.create(course);
+        return repository.create(course);
     }
 
     public void update(UniversityCourse course) {

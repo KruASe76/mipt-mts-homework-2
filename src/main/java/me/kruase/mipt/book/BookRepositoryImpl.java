@@ -21,9 +21,10 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public void create(@NotNull Book book) {
+    public Book create(@NotNull Book book) {
         log.info("Create book = {}", book);
         dummyBook = book.withId(dummyBook.id());
+        return dummyBook;
     }
 
     @Override

@@ -21,9 +21,10 @@ public class UniversityCourseRepositoryImpl implements UniversityCourseRepositor
     }
 
     @Override
-    public void create(@NotNull UniversityCourse course) {
+    public UniversityCourse create(@NotNull UniversityCourse course) {
         log.info("Create course = {}", course);
         dummyCourse = course.withId(dummyCourse.id());
+        return dummyCourse;
     }
 
     @Override

@@ -13,8 +13,8 @@ public class UserService {
         return repository.getById(id);
     }
 
-    public void create(User user) {
-        repository.create(user);
+    public User create(User user) {
+        return repository.create(user);
     }
 
     public void update(User user) {

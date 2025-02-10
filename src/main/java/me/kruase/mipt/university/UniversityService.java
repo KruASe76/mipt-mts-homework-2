@@ -13,8 +13,8 @@ public class UniversityService {
         return repository.getById(id);
     }
 
-    public void create(University university) {
-        repository.create(university);
+    public University create(University university) {
+        return repository.create(university);
     }
 
     public void update(University university) {

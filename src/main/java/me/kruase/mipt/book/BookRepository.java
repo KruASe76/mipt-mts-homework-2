@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 public interface BookRepository {
     Book getById(@NotNull Long id);
 
-    void create(@NotNull Book book);
+    Book create(@NotNull Book book);
 
     void update(@NotNull Book book);
 

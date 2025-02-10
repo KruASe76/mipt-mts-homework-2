@@ -7,26 +7,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/v1/book")
 @RequiredArgsConstructor
 public class BookController {
     private final BookService service;
 
-    @GetMapping("/api/v1/book/{id}")
-    public Book getBook(@PathVariable Long id) {
-        return service.getById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<Book> getBook(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 
-    @PostMapping("/api/v1/book")
-    public void createBook(@ModelAttribute Book book) {
-        service.create(book);
+    @PostMapping
+    public ResponseEntity<Book> createBook(@RequestBody Book book) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(book));
     }
 
-    @PutMapping("/api/v1/book")
-    public void updateBook(@ModelAttribute Book book) {
+    @PutMapping
+    public void updateBook(@RequestBody Book book) {
         service.update(book);
     }
 
-    @DeleteMapping("/api/v1/book/{id}")
+    @DeleteMapping("/{id}")
     public void deleteBook(@PathVariable Long id) {
         service.delete(id);
     }

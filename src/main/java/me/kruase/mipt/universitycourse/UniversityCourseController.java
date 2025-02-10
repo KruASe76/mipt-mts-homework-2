@@ -7,26 +7,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/v1/university-course")
 @RequiredArgsConstructor
 public class UniversityCourseController {
     private final UniversityCourseService service;
 
-    @GetMapping("/api/v1/university-course/{id}")
-    public UniversityCourse getCourse(@PathVariable Long id) {
-        return service.getById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<UniversityCourse> getCourse(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 
-    @PostMapping("/api/v1/university-course")
-    public void createCourse(@ModelAttribute UniversityCourse course) {
-        service.create(course);
+    @PostMapping
+    public ResponseEntity<UniversityCourse> createCourse(@RequestBody UniversityCourse course) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(course));
     }
 
-    @PutMapping("/api/v1/university-course")
-    public void updateCourse(@ModelAttribute UniversityCourse course) {
+    @PutMapping
+    public void updateCourse(@RequestBody UniversityCourse course) {
         service.update(course);
     }
 
-    @DeleteMapping("/api/v1/university-course/{id}")
+    @DeleteMapping("/{id}")
     public void deleteCourse(@PathVariable Long id) {
         service.delete(id);
     }

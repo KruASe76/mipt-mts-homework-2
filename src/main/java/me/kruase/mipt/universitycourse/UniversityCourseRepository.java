@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 public interface UniversityCourseRepository {
     UniversityCourse getById(@NotNull Long id);
 
-    void create(@NotNull UniversityCourse course);
+    UniversityCourse create(@NotNull UniversityCourse course);
 
     void update(@NotNull UniversityCourse course);
 

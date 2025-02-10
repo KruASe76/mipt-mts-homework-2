@@ -24,10 +24,12 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void create(@NotNull User user) {
+    public User create(@NotNull User user) {
         log.info("Create user = {}", user);
 
         dummyUser = user.withId(dummyUser.id());
+
+        return dummyUser;
     }
 
     @Override
