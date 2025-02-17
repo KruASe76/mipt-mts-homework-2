@@ -36,11 +36,6 @@ public interface UserOperations {
 
     @Operation(summary = "Create user")
     @ApiResponse(responseCode = "201", description = "User created")
-    @ApiResponse(
-            responseCode = "404",
-            description = "User not found",
-            content = @Content(schema = @Schema(implementation = UserNotFoundException.class))
-    )
     @PostMapping
     ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserCreateRequest request);
 
