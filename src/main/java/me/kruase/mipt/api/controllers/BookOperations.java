@@ -27,50 +27,45 @@ public interface BookOperations {
     @Operation(summary = "Get book by ID")
     @ApiResponse(responseCode = "200", description = "Book found")
     @ApiResponse(
-        responseCode = "404",
-        description = "Book not found",
-        content = @Content(schema = @Schema(implementation = BookNotFoundException.class))
-)
+            responseCode = "404",
+            description = "Book not found",
+            content = @Content(schema = @Schema(implementation = BookNotFoundException.class))
+    )
     @GetMapping("/{id}")
     ResponseEntity<BookResponse> getBook(@Parameter(description = "Book ID") @PathVariable Long id);
 
     @Operation(summary = "Create book")
     @ApiResponse(responseCode = "201", description = "Book created")
-    @ApiResponse(
-        responseCode = "404",
-        description = "Book not found",
-        content = @Content(schema = @Schema(implementation = BookNotFoundException.class))
-)
     @PostMapping
     ResponseEntity<BookResponse> createBook(@RequestBody @Valid BookCreateRequest request);
 
     @Operation(summary = "Update book")
     @ApiResponse(responseCode = "204", description = "Book updated")
     @ApiResponse(
-        responseCode = "404",
-        description = "Book not found",
-        content = @Content(schema = @Schema(implementation = BookNotFoundException.class))
-)
+            responseCode = "404",
+            description = "Book not found",
+            content = @Content(schema = @Schema(implementation = BookNotFoundException.class))
+    )
     @PutMapping
     ResponseEntity<Void> updateBook(@RequestBody @Valid BookUpdateRequest request);
 
     @Operation(summary = "Partially update book")
     @ApiResponse(responseCode = "204", description = "Book updated")
     @ApiResponse(
-        responseCode = "404",
-        description = "Book not found",
-        content = @Content(schema = @Schema(implementation = BookNotFoundException.class))
-)
+            responseCode = "404",
+            description = "Book not found",
+            content = @Content(schema = @Schema(implementation = BookNotFoundException.class))
+    )
     @PatchMapping
     ResponseEntity<Void> patchBook(@RequestBody @Valid BookPatchRequest request);
 
     @Operation(summary = "Delete book by ID")
     @ApiResponse(responseCode = "204", description = "Book deleted")
     @ApiResponse(
-        responseCode = "404",
-        description = "Book not found",
-        content = @Content(schema = @Schema(implementation = BookNotFoundException.class))
-)
+            responseCode = "404",
+            description = "Book not found",
+            content = @Content(schema = @Schema(implementation = BookNotFoundException.class))
+    )
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteBook(@Parameter(description = "Book ID") @PathVariable Long id);
 

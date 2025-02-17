@@ -36,11 +36,6 @@ public interface UniversityOperations {
 
     @Operation(summary = "Create university")
     @ApiResponse(responseCode = "201", description = "University created")
-    @ApiResponse(
-            responseCode = "404",
-            description = "University not found",
-            content = @Content(schema = @Schema(implementation = UniversityNotFoundException.class))
-    )
     @PostMapping
     ResponseEntity<UniversityResponse> createUniversity(@RequestBody @Valid UniversityCreateRequest request);
 
