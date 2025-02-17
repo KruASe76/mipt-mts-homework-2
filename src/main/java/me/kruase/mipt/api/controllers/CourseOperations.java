@@ -36,11 +36,6 @@ public interface CourseOperations {
 
     @Operation(summary = "Create course")
     @ApiResponse(responseCode = "201", description = "Course created")
-    @ApiResponse(
-            responseCode = "404",
-            description = "Course not found",
-            content = @Content(schema = @Schema(implementation = CourseNotFoundException.class))
-    )
     @PostMapping
     ResponseEntity<CourseResponse> createCourse(@RequestBody @Valid CourseCreateRequest request);
 
