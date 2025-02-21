@@ -52,6 +52,12 @@ dependencies {
     testImplementation("org.testcontainers:cassandra")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
 
+    "org.mockito:mockito-core:5.15.2".let { mockitoDependencyString ->
+        testImplementation(mockitoDependencyString)
+        mockitoAgent(mockitoDependencyString) { isTransitive = false }
+    }
+
+
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
 
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4")
