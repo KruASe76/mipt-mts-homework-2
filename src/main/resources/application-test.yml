@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: mipt-mts-homework-test
+
+server:
+  port: 6666
