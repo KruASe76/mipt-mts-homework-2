@@ -1,8 +1,10 @@
 package me.kruase.mipt.api.controllers.aspects;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -14,6 +16,21 @@ import java.time.Instant;
 @Component
 @Slf4j
 public class ControllerAspect {
+    @Getter
+    private static int eventCount = 0;
+
+    @Around("execution(* me.kruase.mipt.api.controllers.*.*(..))")
+    public Object incrementAround(ProceedingJoinPoint joinPoint) throws Throwable {
+        eventCount++;
+
+        Object result = joinPoint.proceed();
+
+
+        eventCount++;
+
+        return result;
+    }
+
     @Before("execution(* me.kruase.mipt.api.controllers.*.*(..))")
     public void logBefore(JoinPoint joinPoint) {
         log.info("Controller method called: {}", joinPoint.getSignature().getName());

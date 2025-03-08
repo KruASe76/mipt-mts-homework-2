@@ -1,12 +1,12 @@
 package me.kruase.mipt.api.controllers;
 
+import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import me.kruase.mipt.api.models.request.CourseCreateRequest;
 import me.kruase.mipt.api.models.request.CoursePatchRequest;
 import me.kruase.mipt.api.models.request.CourseUpdateRequest;
 import me.kruase.mipt.api.models.response.CourseResponse;
 import me.kruase.mipt.db.course.Course;
-import me.kruase.mipt.db.course.exceptions.CourseNotFoundException;
 import me.kruase.mipt.logic.services.CourseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,59 +17,66 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/course")
 @RequiredArgsConstructor
 public class CourseController implements CourseOperations {
+    private final CircuitBreaker circuitBreaker = CircuitBreaker.ofDefaults("api");
+
     private final CourseService service;
 
     @Override
     public ResponseEntity<CourseResponse> getCourse(Long id) {
-        Course course = service.getById(id);
+        return circuitBreaker.executeSupplier(() -> {
+            Course course = service.getById(id);
 
-        CourseResponse response = new CourseResponse(
-                course.id(),
-                course.name(),
-                course.credits(),
-                course.universityId()
-        );
+            CourseResponse response = new CourseResponse(
+                    course.id(),
+                    course.name(),
+                    course.credits(),
+                    course.universityId()
+            );
 
-        return ResponseEntity.ok(response);
+            return ResponseEntity.ok(response);
+        });
     }
 
     @Override
     public ResponseEntity<CourseResponse> createCourse(CourseCreateRequest request) {
-        Course course = service.create(request);
+        return circuitBreaker.executeSupplier(() -> {
+            Course course = service.create(request);
 
-        CourseResponse response = new CourseResponse(
-                course.id(),
-                course.name(),
-                course.credits(),
-                course.universityId()
-        );
+            CourseResponse response = new CourseResponse(
+                    course.id(),
+                    course.name(),
+                    course.credits(),
+                    course.universityId()
+            );
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        });
     }
 
     @Override
     public ResponseEntity<Void> updateCourse(CourseUpdateRequest request) {
-        service.update(request);
+        return circuitBreaker.executeSupplier(() -> {
+            service.update(request);
 
-        return ResponseEntity.noContent().build();
+            return ResponseEntity.noContent().build();
+        });
     }
 
     @Override
     public ResponseEntity<Void> patchCourse(CoursePatchRequest request) {
-        service.partialUpdate(request);
+        return circuitBreaker.executeSupplier(() -> {
+            service.partialUpdate(request);
 
-        return ResponseEntity.noContent().build();
+            return ResponseEntity.noContent().build();
+        });
     }
 
     @Override
     public ResponseEntity<Void> deleteCourse(Long id) {
-        service.delete(id);
+        return circuitBreaker.executeSupplier(() -> {
+            service.delete(id);
 
-        return ResponseEntity.noContent().build();
-    }
-
-    @Override
-    public ResponseEntity<String> handleCourseNotFound(CourseNotFoundException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+            return ResponseEntity.noContent().build();
+        });
     }
 }

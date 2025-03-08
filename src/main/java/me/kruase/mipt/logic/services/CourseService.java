@@ -8,6 +8,7 @@ import me.kruase.mipt.db.course.Course;
 import me.kruase.mipt.db.course.CourseRepository;
 import me.kruase.mipt.db.university.UniversityRepository;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -36,6 +37,7 @@ public class CourseService {
         );
     }
 
+    @Async
     public void partialUpdate(CoursePatchRequest request) {
         Course current = getById(request.id());
         request.universityIdOptional().ifPresent(this::verifyUniversityId);

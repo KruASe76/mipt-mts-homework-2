@@ -9,3 +9,27 @@ management:
         include: "*"
         exclude: shutdown
       base-path: /admin
+
+server:
+  tomcat:
+    threads:
+      min-spare: 10
+      max: 200
+
+resilience4j:
+  ratelimiter:
+    instances:
+      # noinspection SpringBootApplicationYaml
+      api:
+        limitForPeriod: 5
+        limitRefreshPeriod: 10s
+        timeoutDuration: 0
+  circuitbreaker:
+    instances:
+      # noinspection SpringBootApplicationYaml
+      api:
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowType: count_based
+        slidingWindowSize: 10

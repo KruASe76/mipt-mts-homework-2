@@ -14,7 +14,6 @@ import me.kruase.mipt.api.models.response.UserResponse;
 import me.kruase.mipt.db.user.exceptions.UserNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -68,7 +67,4 @@ public interface UserOperations {
     )
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteUser(@Parameter(description = "User ID") @PathVariable Long id);
-
-    @ExceptionHandler(UserNotFoundException.class)
-    ResponseEntity<String> handleUserNotFound(UserNotFoundException exception);
 }

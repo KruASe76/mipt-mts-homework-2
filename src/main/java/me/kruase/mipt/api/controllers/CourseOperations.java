@@ -14,7 +14,6 @@ import me.kruase.mipt.api.models.response.CourseResponse;
 import me.kruase.mipt.db.course.exceptions.CourseNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -68,7 +67,4 @@ public interface CourseOperations {
     )
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteCourse(@Parameter(description = "Course ID") @PathVariable Long id);
-
-    @ExceptionHandler(CourseNotFoundException.class)
-    ResponseEntity<String> handleCourseNotFound(CourseNotFoundException exception);
 }

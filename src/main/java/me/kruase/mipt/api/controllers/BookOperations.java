@@ -14,7 +14,6 @@ import me.kruase.mipt.api.models.response.BookResponse;
 import me.kruase.mipt.db.book.exceptions.BookNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -68,7 +67,4 @@ public interface BookOperations {
     )
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteBook(@Parameter(description = "Book ID") @PathVariable Long id);
-
-    @ExceptionHandler(BookNotFoundException.class)
-    ResponseEntity<String> handleBookNotFound(BookNotFoundException exception);
 }

@@ -6,7 +6,6 @@ import me.kruase.mipt.api.models.request.UserPatchRequest;
 import me.kruase.mipt.api.models.request.UserUpdateRequest;
 import me.kruase.mipt.api.models.response.UserResponse;
 import me.kruase.mipt.db.user.User;
-import me.kruase.mipt.db.user.exceptions.UserNotFoundException;
 import me.kruase.mipt.logic.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,11 +57,6 @@ public class UserController implements UserOperations {
         service.delete(id);
 
         return ResponseEntity.noContent().build();
-    }
-
-    @Override
-    public ResponseEntity<String> handleUserNotFound(UserNotFoundException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
     }
 }
 
