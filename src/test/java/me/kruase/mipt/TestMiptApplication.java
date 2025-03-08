@@ -6,7 +6,6 @@ public class TestMiptApplication {
     public static void main(String[] args) {
         SpringApplication
                 .from(MiptApplication::main)
-                .with(TestcontainersConfiguration.class)
                 .run(args);
     }
 }

@@ -14,7 +14,6 @@ import me.kruase.mipt.api.models.response.UniversityResponse;
 import me.kruase.mipt.db.university.exceptions.UniversityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -68,7 +67,4 @@ public interface UniversityOperations {
     )
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteUniversity(@Parameter(description = "University ID") @PathVariable Long id);
-
-    @ExceptionHandler(UniversityNotFoundException.class)
-    ResponseEntity<String> handleUniversityNotFound(UniversityNotFoundException exception);
 }

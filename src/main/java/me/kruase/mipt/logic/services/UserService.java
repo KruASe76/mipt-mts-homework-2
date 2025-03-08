@@ -7,6 +7,7 @@ import me.kruase.mipt.api.models.request.UserUpdateRequest;
 import me.kruase.mipt.db.user.User;
 import me.kruase.mipt.db.user.UserRepository;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final @NotNull UserRepository repository;
 
+    @Cacheable(value = "mainCache", key = "#id")
     public @NotNull User getById(Long id) {
         return repository.getById(id);
     }

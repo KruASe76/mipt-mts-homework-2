@@ -7,7 +7,10 @@ import me.kruase.mipt.api.models.request.BookUpdateRequest;
 import me.kruase.mipt.db.book.Book;
 import me.kruase.mipt.db.book.BookRepository;
 import me.kruase.mipt.db.course.CourseRepository;
+import me.kruase.mipt.db.course.exceptions.CourseNotFoundException;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -36,6 +39,13 @@ public class BookService {
         );
     }
 
+    // it is possible that creation of the Course was stuck in a different thread,
+    // but the Book is being created immediately after
+    @Retryable(
+            retryFor = CourseNotFoundException.class,
+            maxAttempts = 5,
+            backoff = @Backoff(delay = 10000)
+    )
     public void partialUpdate(BookPatchRequest request) {
         Book current = getById(request.id());
         request.courseIdOptional().ifPresent(this::verifyCourseId);

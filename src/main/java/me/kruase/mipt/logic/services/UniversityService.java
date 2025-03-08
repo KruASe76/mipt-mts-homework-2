@@ -9,10 +9,15 @@ import me.kruase.mipt.db.university.UniversityRepository;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 @Service
 @RequiredArgsConstructor
 public class UniversityService {
     private final @NotNull UniversityRepository repository;
+
+    private final Set<Long> deletedIds = ConcurrentHashMap.newKeySet();
 
     public @NotNull University getById(Long id) {
         return repository.getById(id);
@@ -40,7 +45,13 @@ public class UniversityService {
         );
     }
 
+    // let's say that university ids are globally unique to avoid confusion,
+    // so each id can be deleted only once
     public void delete(Long id) {
+        if (!deletedIds.add(id)) {
+            return;
+        }
+
         repository.delete(id);
     }
 }
