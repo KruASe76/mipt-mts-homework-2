@@ -1,13 +1,12 @@
 package me.kruase.mipt.db.book;
 
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface BookRepository {
-    @NotNull Book getById(@NotNull Long id);
+import java.util.Optional;
 
-    @NotNull Book create(@NotNull Book book);
-
-    void update(@NotNull Book book);
-
-    void delete(@NotNull Long id);
+@Repository
+public interface BookRepository extends JpaRepository<Book, Long> {
+    @NotNull Optional<Book> findById(@NotNull Long id);
 }

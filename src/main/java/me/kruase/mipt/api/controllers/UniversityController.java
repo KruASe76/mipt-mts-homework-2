@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 import me.kruase.mipt.api.models.request.UniversityCreateRequest;
 import me.kruase.mipt.api.models.request.UniversityPatchRequest;
 import me.kruase.mipt.api.models.request.UniversityUpdateRequest;
-import me.kruase.mipt.api.models.response.UniversityResponse;
+import me.kruase.mipt.api.models.response.UniversityRichResponse;
 import me.kruase.mipt.db.university.University;
-import me.kruase.mipt.logic.services.UniversityService;
+import me.kruase.mipt.services.UniversityService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,16 +24,12 @@ public class UniversityController implements UniversityOperations {
     private final UniversityService service;
 
     @Override
-    public ResponseEntity<UniversityResponse> getUniversity(Long id) {
+    public ResponseEntity<UniversityRichResponse> getUniversity(Long id) {
         return rateLimiter.executeSupplier(() ->
                 circuitBreaker.executeSupplier(() -> {
                     University university = service.getById(id);
 
-                    UniversityResponse response = new UniversityResponse(
-                            university.id(),
-                            university.name(),
-                            university.location()
-                    );
+                    UniversityRichResponse response = UniversityRichResponse.from(university);
 
                     return ResponseEntity.ok(response);
                 })
@@ -41,16 +37,12 @@ public class UniversityController implements UniversityOperations {
     }
 
     @Override
-    public ResponseEntity<UniversityResponse> createUniversity(UniversityCreateRequest request) {
+    public ResponseEntity<UniversityRichResponse> createUniversity(UniversityCreateRequest request) {
         return rateLimiter.executeSupplier(() ->
                 circuitBreaker.executeSupplier(() -> {
                     University university = service.create(request);
 
-                    UniversityResponse response = new UniversityResponse(
-                            university.id(),
-                            university.name(),
-                            university.location()
-                    );
+                    UniversityRichResponse response = UniversityRichResponse.from(university);
 
                     return ResponseEntity.status(HttpStatus.CREATED).body(response);
                 })

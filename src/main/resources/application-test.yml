@@ -1,6 +1,20 @@
 spring:
   application:
     name: mipt-mts-homework-test
+  jpa:
+    hibernate:
+      ddl-auto: create
+  flyway:
+    enabled: false
 
 server:
   port: 6666
+
+cache:
+  maximum-size: 0
+
+logging:
+  level:
+    me.kruase.mipt: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.http.converter: DEBUG

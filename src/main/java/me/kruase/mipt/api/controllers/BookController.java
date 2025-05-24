@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 import me.kruase.mipt.api.models.request.BookCreateRequest;
 import me.kruase.mipt.api.models.request.BookPatchRequest;
 import me.kruase.mipt.api.models.request.BookUpdateRequest;
-import me.kruase.mipt.api.models.response.BookResponse;
+import me.kruase.mipt.api.models.response.BookRichResponse;
 import me.kruase.mipt.db.book.Book;
-import me.kruase.mipt.logic.services.BookService;
+import me.kruase.mipt.services.BookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,32 +22,22 @@ public class BookController implements BookOperations {
     private final BookService service;
 
     @Override
-    public ResponseEntity<BookResponse> getBook(Long id) {
+    public ResponseEntity<BookRichResponse> getBook(Long id) {
         return rateLimiter.executeSupplier(() -> {
-            Book book = service.getById(id);
+            Book book = service.getRichById(id);
 
-            BookResponse response = new BookResponse(
-                    book.id(),
-                    book.title(),
-                    book.author(),
-                    book.courseId()
-            );
+            BookRichResponse response = BookRichResponse.from(book);
 
             return ResponseEntity.ok(response);
         });
     }
 
     @Override
-    public ResponseEntity<BookResponse> createBook(BookCreateRequest request) {
+    public ResponseEntity<BookRichResponse> createBook(BookCreateRequest request) {
         return rateLimiter.executeSupplier(() -> {
             Book book = service.create(request);
 
-            BookResponse response = new BookResponse(
-                    book.id(),
-                    book.title(),
-                    book.author(),
-                    book.courseId()
-            );
+            BookRichResponse response = BookRichResponse.from(book);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         });

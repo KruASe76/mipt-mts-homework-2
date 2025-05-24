@@ -25,7 +25,6 @@ public class ControllerAspect {
 
         Object result = joinPoint.proceed();
 
-
         eventCount++;
 
         return result;

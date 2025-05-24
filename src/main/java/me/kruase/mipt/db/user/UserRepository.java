@@ -1,13 +1,15 @@
 package me.kruase.mipt.db.user;
 
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
-public interface UserRepository {
-    @NotNull User getById(@NotNull Long id);
+import java.util.Optional;
 
-    @NotNull User create(@NotNull User user);
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+    @NotNull Optional<User> findById(@NotNull Long id);
 
-    void update(@NotNull User user);
-
-    void delete(@NotNull Long id);
+    @NotNull Optional<User> findByEmail(@NotNull String email);
 }

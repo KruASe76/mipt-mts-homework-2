@@ -6,7 +6,7 @@ import me.kruase.mipt.api.models.request.UserPatchRequest;
 import me.kruase.mipt.api.models.request.UserUpdateRequest;
 import me.kruase.mipt.api.models.response.UserResponse;
 import me.kruase.mipt.db.user.User;
-import me.kruase.mipt.logic.services.UserService;
+import me.kruase.mipt.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,9 +20,9 @@ public class UserController implements UserOperations {
 
     @Override
     public ResponseEntity<UserResponse> getUser(Long id) {
-        User user = service.getById(id);
+        User user = service.getRichById(id);
 
-        UserResponse response = new UserResponse(user.id(), user.email(), user.name(), user.age());
+        UserResponse response = UserResponse.from(user);
 
         return ResponseEntity.ok(response);
     }
@@ -31,11 +31,9 @@ public class UserController implements UserOperations {
     public ResponseEntity<UserResponse> createUser(UserCreateRequest request) {
         User user = service.create(request);
 
-        UserResponse response = new UserResponse(user.id(), user.email(), user.name(), user.age());
+        UserResponse response = UserResponse.from(user);
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Override

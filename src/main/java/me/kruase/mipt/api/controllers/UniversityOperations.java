@@ -10,7 +10,7 @@ import jakarta.validation.Valid;
 import me.kruase.mipt.api.models.request.UniversityCreateRequest;
 import me.kruase.mipt.api.models.request.UniversityPatchRequest;
 import me.kruase.mipt.api.models.request.UniversityUpdateRequest;
-import me.kruase.mipt.api.models.response.UniversityResponse;
+import me.kruase.mipt.api.models.response.UniversityRichResponse;
 import me.kruase.mipt.db.university.exceptions.UniversityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,12 +31,12 @@ public interface UniversityOperations {
             content = @Content(schema = @Schema(implementation = UniversityNotFoundException.class))
     )
     @GetMapping("/{id}")
-    ResponseEntity<UniversityResponse> getUniversity(@Parameter(description = "University ID") @PathVariable Long id);
+    ResponseEntity<UniversityRichResponse> getUniversity(@Parameter(description = "University ID") @PathVariable Long id);
 
     @Operation(summary = "Create university")
     @ApiResponse(responseCode = "201", description = "University created")
     @PostMapping
-    ResponseEntity<UniversityResponse> createUniversity(@RequestBody @Valid UniversityCreateRequest request);
+    ResponseEntity<UniversityRichResponse> createUniversity(@RequestBody @Valid UniversityCreateRequest request);
 
     @Operation(summary = "Update university")
     @ApiResponse(responseCode = "204", description = "University updated")

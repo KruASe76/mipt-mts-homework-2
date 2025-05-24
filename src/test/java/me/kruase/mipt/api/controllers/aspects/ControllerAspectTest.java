@@ -1,10 +1,12 @@
 package me.kruase.mipt.api.controllers.aspects;
 
 import me.kruase.mipt.api.controllers.UserController;
-import me.kruase.mipt.logic.services.UserService;
+import me.kruase.mipt.config.TestcontainersConfig;
+import me.kruase.mipt.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.util.AopTestUtils;
 
@@ -15,7 +17,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @SpringBootTest
-class ControllerAspectTest {
+@ActiveProfiles("test")
+class ControllerAspectTest extends TestcontainersConfig {
     @Autowired
     private UserController userControllerProxy;
 
@@ -26,12 +29,12 @@ class ControllerAspectTest {
     public void testCounter() {
         doNothing().when(userService).delete(anyLong());
 
-        assertEquals(0, ControllerAspect.getEventCount());
+        int initialCount = ControllerAspect.getEventCount();
 
         // regular call: both increment and first service call
         userControllerProxy.deleteUser(1L);
 
-        assertEquals(2, ControllerAspect.getEventCount());
+        assertEquals(initialCount + 2, ControllerAspect.getEventCount());
         verify(userService, times(1)).delete(1L);
 
         // raw call: no increment and second service call
@@ -39,7 +42,7 @@ class ControllerAspectTest {
 
         rawController.deleteUser(1L);
 
-        assertEquals(2, ControllerAspect.getEventCount());
+        assertEquals(initialCount + 2, ControllerAspect.getEventCount());
         verify(userService, times(2)).delete(1L);
     }
 }

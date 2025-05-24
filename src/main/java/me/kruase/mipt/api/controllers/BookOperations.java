@@ -10,7 +10,7 @@ import jakarta.validation.Valid;
 import me.kruase.mipt.api.models.request.BookCreateRequest;
 import me.kruase.mipt.api.models.request.BookPatchRequest;
 import me.kruase.mipt.api.models.request.BookUpdateRequest;
-import me.kruase.mipt.api.models.response.BookResponse;
+import me.kruase.mipt.api.models.response.BookRichResponse;
 import me.kruase.mipt.db.book.exceptions.BookNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,12 +31,12 @@ public interface BookOperations {
             content = @Content(schema = @Schema(implementation = BookNotFoundException.class))
     )
     @GetMapping("/{id}")
-    ResponseEntity<BookResponse> getBook(@Parameter(description = "Book ID") @PathVariable Long id);
+    ResponseEntity<BookRichResponse> getBook(@Parameter(description = "Book ID") @PathVariable Long id);
 
     @Operation(summary = "Create book")
     @ApiResponse(responseCode = "201", description = "Book created")
     @PostMapping
-    ResponseEntity<BookResponse> createBook(@RequestBody @Valid BookCreateRequest request);
+    ResponseEntity<BookRichResponse> createBook(@RequestBody @Valid BookCreateRequest request);
 
     @Operation(summary = "Update book")
     @ApiResponse(responseCode = "204", description = "Book updated")

@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 import me.kruase.mipt.api.models.request.CourseCreateRequest;
 import me.kruase.mipt.api.models.request.CoursePatchRequest;
 import me.kruase.mipt.api.models.request.CourseUpdateRequest;
-import me.kruase.mipt.api.models.response.CourseResponse;
+import me.kruase.mipt.api.models.response.CourseRichResponse;
 import me.kruase.mipt.db.course.Course;
-import me.kruase.mipt.logic.services.CourseService;
+import me.kruase.mipt.services.CourseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,32 +22,22 @@ public class CourseController implements CourseOperations {
     private final CourseService service;
 
     @Override
-    public ResponseEntity<CourseResponse> getCourse(Long id) {
+    public ResponseEntity<CourseRichResponse> getCourse(Long id) {
         return circuitBreaker.executeSupplier(() -> {
-            Course course = service.getById(id);
+            Course course = service.getRichById(id);
 
-            CourseResponse response = new CourseResponse(
-                    course.id(),
-                    course.name(),
-                    course.credits(),
-                    course.universityId()
-            );
+            CourseRichResponse response = CourseRichResponse.from(course);
 
             return ResponseEntity.ok(response);
         });
     }
 
     @Override
-    public ResponseEntity<CourseResponse> createCourse(CourseCreateRequest request) {
+    public ResponseEntity<CourseRichResponse> createCourse(CourseCreateRequest request) {
         return circuitBreaker.executeSupplier(() -> {
             Course course = service.create(request);
 
-            CourseResponse response = new CourseResponse(
-                    course.id(),
-                    course.name(),
-                    course.credits(),
-                    course.universityId()
-            );
+            CourseRichResponse response = CourseRichResponse.from(course);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         });

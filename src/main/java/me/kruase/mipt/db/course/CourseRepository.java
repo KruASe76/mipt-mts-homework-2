@@ -1,14 +1,12 @@
 package me.kruase.mipt.db.course;
 
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface CourseRepository {
-    @NotNull Course getById(@NotNull Long id);
+import java.util.Optional;
 
-    @NotNull Course create(@NotNull Course course);
-
-    void update(@NotNull Course course);
-
-    void delete(@NotNull Long id);
+@Repository
+public interface CourseRepository extends JpaRepository<Course, Long> {
+    @NotNull Optional<Course> findById(@NotNull Long id);
 }
-
