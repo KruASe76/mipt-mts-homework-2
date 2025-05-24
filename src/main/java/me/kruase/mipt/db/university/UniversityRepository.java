@@ -1,14 +1,12 @@
 package me.kruase.mipt.db.university;
 
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface UniversityRepository {
-    @NotNull University getById(@NotNull Long id);
+import java.util.Optional;
 
-    @NotNull University create(@NotNull University university);
-
-    void update(@NotNull University university);
-
-    void delete(@NotNull Long id);
+@Repository
+public interface UniversityRepository extends JpaRepository<University, Long> {
+    @NotNull Optional<University> findById(@NotNull Long id);
 }
-

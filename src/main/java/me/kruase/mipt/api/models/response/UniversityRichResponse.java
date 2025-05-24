@@ -6,9 +6,11 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import me.kruase.mipt.db.university.University;
 
+import java.util.List;
 
-@Schema(description = "University entity")
-public record UniversityResponse(
+
+@Schema(description = "University entity with courses")
+public record UniversityRichResponse(
         @Schema(example = "42")
         @NotNull @PositiveOrZero Long id,
 
@@ -16,13 +18,17 @@ public record UniversityResponse(
         @NotBlank String name,
 
         @Schema(example = "Dolgoprudny")
-        @NotBlank String location
+        @NotBlank String location,
+
+        @Schema
+        @NotNull List<CourseResponse> courses
 ) {
-    public static UniversityResponse from(University university) {
-        return new UniversityResponse(
+    public static UniversityRichResponse from(University university) {
+        return new UniversityRichResponse(
                 university.getId(),
                 university.getName(),
-                university.getLocation()
+                university.getLocation(),
+                university.getCourses().stream().map(CourseResponse::from).toList()
         );
     }
 }

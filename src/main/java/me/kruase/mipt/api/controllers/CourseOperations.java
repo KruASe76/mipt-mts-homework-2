@@ -10,7 +10,7 @@ import jakarta.validation.Valid;
 import me.kruase.mipt.api.models.request.CourseCreateRequest;
 import me.kruase.mipt.api.models.request.CoursePatchRequest;
 import me.kruase.mipt.api.models.request.CourseUpdateRequest;
-import me.kruase.mipt.api.models.response.CourseResponse;
+import me.kruase.mipt.api.models.response.CourseRichResponse;
 import me.kruase.mipt.db.course.exceptions.CourseNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,12 +31,12 @@ public interface CourseOperations {
             content = @Content(schema = @Schema(implementation = CourseNotFoundException.class))
     )
     @GetMapping("/{id}")
-    ResponseEntity<CourseResponse> getCourse(@Parameter(description = "Course ID") @PathVariable Long id);
+    ResponseEntity<CourseRichResponse> getCourse(@Parameter(description = "Course ID") @PathVariable Long id);
 
     @Operation(summary = "Create course")
     @ApiResponse(responseCode = "201", description = "Course created")
     @PostMapping
-    ResponseEntity<CourseResponse> createCourse(@RequestBody @Valid CourseCreateRequest request);
+    ResponseEntity<CourseRichResponse> createCourse(@RequestBody @Valid CourseCreateRequest request);
 
     @Operation(summary = "Update course")
     @ApiResponse(responseCode = "204", description = "Course updated")

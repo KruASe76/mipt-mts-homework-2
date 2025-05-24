@@ -1,6 +1,0 @@
-spring:
-  application:
-    name: mipt-mts-homework-testcontainers
-
-server:
-  port: 5435

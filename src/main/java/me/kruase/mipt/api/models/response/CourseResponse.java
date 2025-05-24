@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import me.kruase.mipt.db.course.Course;
 
 @Schema(description = "Course entity")
 public record CourseResponse(
@@ -14,8 +15,9 @@ public record CourseResponse(
         @NotBlank String name,
 
         @Schema(example = "777")
-        @NotNull @PositiveOrZero Integer credits,
-
-        @Schema(example = "69")
-        @NotNull @PositiveOrZero Long universityId
-) {}
+        @NotNull @PositiveOrZero Integer credits
+) {
+    public static CourseResponse from(Course course) {
+        return new CourseResponse(course.getId(), course.getName(), course.getCredits());
+    }
+}

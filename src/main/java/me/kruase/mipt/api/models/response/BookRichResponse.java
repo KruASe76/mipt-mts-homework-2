@@ -6,8 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import me.kruase.mipt.db.book.Book;
 
-@Schema(description = "Book entity")
-public record BookResponse(
+@Schema(description = "Book entity with course")
+public record BookRichResponse(
         @Schema(example = "42")
         @NotNull @PositiveOrZero Long id,
 
@@ -15,9 +15,17 @@ public record BookResponse(
         @NotBlank String title,
 
         @Schema(example = "Joshua Bloch")
-        @NotBlank String author
+        @NotBlank String author,
+
+        @Schema
+        @NotNull CourseResponse course
 ) {
-    public static BookResponse from(Book book) {
-        return new BookResponse(book.getId(), book.getTitle(), book.getAuthor());
+    public static BookRichResponse from(Book book) {
+        return new BookRichResponse(
+                book.getId(),
+                book.getTitle(),
+                book.getAuthor(),
+                CourseResponse.from(book.getCourse())
+        );
     }
 }

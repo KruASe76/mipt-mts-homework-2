@@ -6,7 +6,7 @@ import me.kruase.mipt.api.models.request.BookCreateRequest;
 import me.kruase.mipt.api.models.request.BookUpdateRequest;
 import me.kruase.mipt.db.book.Book;
 import me.kruase.mipt.db.book.exceptions.BookNotFoundException;
-import me.kruase.mipt.logic.services.BookService;
+import me.kruase.mipt.services.BookService;
 import me.kruase.mipt.util.SampleDataUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -50,41 +50,42 @@ class BookControllerMvcTest {
     @Test
     public void testGetBookSuccess() throws Exception {
         Book book = SampleDataUtil.DEFAULT_BOOK;
-        when(bookService.getById(book.id()))
+        Long bookId = 1L;
+        when(bookService.getRichById(bookId))
                 .thenReturn(book);
 
-        mockMvc.perform(get(basePath + "/" + book.id()))
+        mockMvc.perform(get(basePath + "/" + bookId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(jsonContentType))
-                .andExpect(jsonPath("$.id").value(book.id()))
-                .andExpect(jsonPath("$.title").value(book.title()))
-                .andExpect(jsonPath("$.author").value(book.author()))
-                .andExpect(jsonPath("$.courseId").value(book.courseId()));
-        verify(bookService).getById(book.id());
+                .andExpect(jsonPath("$.title").value(book.getTitle()))
+                .andExpect(jsonPath("$.author").value(book.getAuthor()))
+                .andExpect(jsonPath("$.course.name").value(book.getCourse().getName()))
+                .andExpect(jsonPath("$.course.credits").value(book.getCourse().getCredits()));
+        verify(bookService, times(1)).getRichById(bookId);
     }
 
     @Test
     public void testGetBookNotFound() throws Exception {
-        Long nonexistentBookId = SampleDataUtil.NEW_BOOK.id();
+        Long nonexistentBookId = 666L;
 
-        when(bookService.getById(nonexistentBookId))
+        when(bookService.getRichById(nonexistentBookId))
                 .thenThrow(new BookNotFoundException(nonexistentBookId));
 
         mockMvc.perform(get(basePath + "/" + nonexistentBookId))
                 .andExpect(status().isNotFound());
-        verify(bookService).getById(nonexistentBookId);
+        verify(bookService, times(1)).getRichById(nonexistentBookId);
     }
 
     @Test
     public void testCreateBookCreated() throws Exception {
         BookCreateRequest createRequest = new BookCreateRequest(
-                SampleDataUtil.NEW_BOOK.title(),
-                SampleDataUtil.NEW_BOOK.author(),
-                SampleDataUtil.NEW_BOOK.courseId()
+                SampleDataUtil.NEW_BOOK.getTitle(),
+                SampleDataUtil.NEW_BOOK.getAuthor(),
+                1L
         );
-        Book expectedBook = SampleDataUtil.NEW_BOOK.withId(SampleDataUtil.DEFAULT_BOOK.id());
+        Book expectedBook = SampleDataUtil.NEW_BOOK;
 
-        when(bookService.create(any(BookCreateRequest.class)))
+        when(bookService.create(createRequest))
                 .thenReturn(expectedBook);
 
         mockMvc.perform(
@@ -94,20 +95,20 @@ class BookControllerMvcTest {
                 )
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(jsonContentType))
-                .andExpect(jsonPath("$.id").value(expectedBook.id()))
-                .andExpect(jsonPath("$.title").value(expectedBook.title()))
-                .andExpect(jsonPath("$.author").value(expectedBook.author()))
-                .andExpect(jsonPath("$.courseId").value(expectedBook.courseId()));
-        verify(bookService).create(createRequest);
+                .andExpect(jsonPath("$.title").value(expectedBook.getTitle()))
+                .andExpect(jsonPath("$.author").value(expectedBook.getAuthor()))
+                .andExpect(jsonPath("$.course.name").value(expectedBook.getCourse().getName()))
+                .andExpect(jsonPath("$.course.credits").value(expectedBook.getCourse().getCredits()));
+        verify(bookService, times(1)).create(createRequest);
     }
 
     @Test
     public void testUpdateBookNoContent() throws Exception {
         BookUpdateRequest updateRequest = new BookUpdateRequest(
-                SampleDataUtil.DEFAULT_BOOK.id(),
-                SampleDataUtil.NEW_BOOK.title(),
-                SampleDataUtil.NEW_BOOK.author(),
-                SampleDataUtil.DEFAULT_BOOK.courseId()
+                1L,
+                SampleDataUtil.NEW_BOOK.getTitle(),
+                SampleDataUtil.NEW_BOOK.getAuthor(),
+                1L
         );
 
         doNothing().when(bookService).update(updateRequest);
@@ -118,18 +119,16 @@ class BookControllerMvcTest {
                                 .content(objectMapper.writeValueAsString(updateRequest))
                 )
                 .andExpect(status().isNoContent());
-        verify(bookService).update(updateRequest);
+        verify(bookService, times(1)).update(updateRequest);
     }
-
-
 
     @Test
     public void testUpdateBookNotFound() throws Exception {
         BookUpdateRequest updateRequest = new BookUpdateRequest(
-                SampleDataUtil.NEW_BOOK.id(),
-                SampleDataUtil.NEW_BOOK.title(),
-                SampleDataUtil.NEW_BOOK.author(),
-                SampleDataUtil.DEFAULT_BOOK.courseId()
+                666L,
+                SampleDataUtil.NEW_BOOK.getTitle(),
+                SampleDataUtil.NEW_BOOK.getAuthor(),
+                666L
         );
 
         doThrow(BookNotFoundException.class).when(bookService).update(updateRequest);
@@ -140,28 +139,28 @@ class BookControllerMvcTest {
                                 .content(objectMapper.writeValueAsString(updateRequest))
                 )
                 .andExpect(status().isNotFound());
-        verify(bookService).update(updateRequest);
+        verify(bookService, times(1)).update(updateRequest);
     }
 
     @Test
     public void testDeleteBookNoContent() throws Exception {
-        Long bookId = SampleDataUtil.DEFAULT_BOOK.id();
+        Long bookId = 1L;
 
         doNothing().when(bookService).delete(bookId);
 
         mockMvc.perform(delete(basePath + "/" + bookId))
                 .andExpect(status().isNoContent());
-        verify(bookService).delete(bookId);
+        verify(bookService, times(1)).delete(bookId);
     }
 
     @Test
     public void testDeleteBookNotFound() throws Exception {
-        Long bookId = SampleDataUtil.NEW_BOOK.id();
+        Long bookId = 666L;
 
         doThrow(BookNotFoundException.class).when(bookService).delete(bookId);
 
         mockMvc.perform(delete(basePath + "/" + bookId))
                 .andExpect(status().isNotFound());
-        verify(bookService).delete(bookId);
+        verify(bookService, times(1)).delete(bookId);
     }
 }

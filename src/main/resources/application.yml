@@ -1,6 +1,18 @@
 spring:
   application:
     name: mipt-mts-homework
+  datasource:
+    url: jdbc:postgresql://localhost:5432/kruase
+    username: kruase
+    password: kruase-password
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
 
 management:
   endpoints:
@@ -33,3 +45,8 @@ resilience4j:
         permittedNumberOfCallsInHalfOpenState: 3
         slidingWindowType: count_based
         slidingWindowSize: 10
+
+cache:
+  expire-after-seconds: 300
+  initial-capacity: 100
+  maximum-size: 100
